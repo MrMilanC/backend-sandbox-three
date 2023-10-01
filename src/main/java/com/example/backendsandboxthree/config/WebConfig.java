@@ -3,7 +3,10 @@ package com.example.backendsandboxthree.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import static com.example.backendsandboxthree.controller.AdminController.uploadDir;
 
 @Configuration
 @EnableWebMvc
@@ -17,5 +20,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("*")
                 .allowedHeaders("*");
                 //.allowCredentials(true);
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/frontend-webshop-main/img/user-files/**")
+                .addResourceLocations("file:C:/Users/milan/IdeaProjects/backend-sandbox-three/src/main/resources/static/img/");
     }
 }

@@ -36,6 +36,7 @@ public class AdminController {
     /////////////////////Product Section
 
     public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img";
+    //public static String uploadDir = "http://localhost:63343/frontend-webshop-main/img/user-files";
 
     @Autowired
     private ProductService productService;
@@ -132,11 +133,6 @@ public class AdminController {
         }
     }
 
-//    @GetMapping("/products/view/{productId}")
-//    public ResponseEntity<Product> viewProductById(@PathVariable("productId") Long productId) throws ProductException {
-//        return new ResponseEntity<Product>(productService.viewProduct(productId), HttpStatus.OK);
-//    }
-
     @DeleteMapping("/products/remove/{productId}")  //DONE
     public ResponseEntity<Product> removeProductById(@PathVariable("productId") Long productId)
             throws ProductException {
@@ -180,52 +176,10 @@ public class AdminController {
         return new ResponseEntity<>("User is registered successfully!", HttpStatus.OK);
     }
 
-//    @GetMapping("/users/get")
-//    //@PreAuthorize("hasRole('ADMIN')")
-//    public List<User> getAllCategories () {
-//        return userRepository.findAll();
-//    }
-
     @DeleteMapping("/users/remove/{userId}")  //DONE
     public ResponseEntity<User> removeUserById(@PathVariable("userId") Long userId)
             throws UserException {
         return new ResponseEntity<User>(userService.removeUser(userId), HttpStatus.OK);
     }
-
-    /*@GetMapping("/users/{id}")
-    public User show(@PathVariable String id){
-        int userId = Integer.parseInt(id);
-        return userRepository.findOne(userId);
-    }
-
-    @PostMapping("/users/search")
-    public List<User> search(@RequestBody Map<String, String> body){
-        String searchTerm = body.get("text");
-        return userRepository.findByTitleContainingOrContentContaining(searchTerm, searchTerm);
-    }
-
-    @PostMapping("/users")
-    public User create(@RequestBody Map<String, String> body){
-        String title = body.get("title");
-        String content = body.get("content");
-        return userRepository.save(new User(title, content));
-    }
-
-    @PutMapping("/users/{id}")
-    public User update(@PathVariable String id, @RequestBody Map<String, String> body){
-        int blogId = Integer.parseInt(id);
-        // getting blog
-        User blog = userRepository.findOne(blogId);
-        user.setTitle(body.get("title"));
-        user.setContent(body.get("content"));
-        return blogRepository.save(blog);
-    }
-
-    @DeleteMapping("users/{userId}")
-    public boolean delete(@PathVariable String id){
-        int blogId = Integer.parseInt(id);
-        userRepository.delete(userId);
-        return true;
-    }*/
 }
 
