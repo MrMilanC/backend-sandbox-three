@@ -25,7 +25,7 @@ public class RegisterController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create", produces = "application/json")
     public ResponseEntity<?> registerUser(@RequestBody @Valid NewUserDTO newUserDTO) throws UserException {
 
         // checking for username exists in a database

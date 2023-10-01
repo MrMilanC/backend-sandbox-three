@@ -1,6 +1,7 @@
 package com.example.backendsandboxthree.controller;
 
 import com.example.backendsandboxthree.dto.NewProductDTO;
+import com.example.backendsandboxthree.dto.NewUserDTO;
 import com.example.backendsandboxthree.exception.ProductException;
 import com.example.backendsandboxthree.exception.UserException;
 import com.example.backendsandboxthree.model.Category;
@@ -10,10 +11,12 @@ import com.example.backendsandboxthree.repository.UserRepository;
 import com.example.backendsandboxthree.service.CategoryService;
 import com.example.backendsandboxthree.service.ProductService;
 import com.example.backendsandboxthree.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -136,6 +139,8 @@ public class AdminController {
     private UserRepository userRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/users/view")
     //@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -145,13 +150,27 @@ public class AdminController {
     }
 
     @PostMapping("/users/create")
-    public User createUser(@RequestBody User user) {
-        userRepository.save(user);
-        return user;
+    public ResponseEntity<?> createUser(@RequestBody @Valid NewUserDTO newUserDTO) throws UserException {
+
+        // checking for username exists in a database
+        if(userService.doesUsernameExist(newUserDTO.getUsername())){
+            return new ResponseEntity<>("Username is already exist!", HttpStatus.BAD_REQUEST);
+        }
+
+        User user = new User();
+        user.setFirstName(newUserDTO.getFirstName());
+        user.setLastName(newUserDTO.getLastName());
+        user.setUsername(newUserDTO.getUsername());
+        user.setEmail(newUserDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(newUserDTO.getPassword()));
+        user.setRole(newUserDTO.getRole());
+
+        userService.addUser(user);
+        return new ResponseEntity<>("User is registered successfully!", HttpStatus.OK);
     }
 
     @GetMapping("/users/get")
-    @PreAuthorize("hasRole('ADMIN')")
+    //@PreAuthorize("hasRole('ADMIN')")
     public List<User> getAllCategories () {
         return userRepository.findAll();
     }
