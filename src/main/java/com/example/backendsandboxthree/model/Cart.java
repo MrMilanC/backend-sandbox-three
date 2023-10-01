@@ -14,15 +14,17 @@ public class Cart {
     @Column(name = "id")
     private Long id;
 
-    private Integer product_quantity;
+    //private Integer cartItemQuantity;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Product> products;
+//    @Column(name="cart_total_number_of_items")
+//    private long totalNumberOfItems;
+//    @Column(name="cart_total_price")
+//    private double totalPrice;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    //@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cart")
+    private List<CartItem> cartItems;
+
+    @OneToOne//(cascade = CascadeType.ALL)
     private User user;
-
-
-
-
 }

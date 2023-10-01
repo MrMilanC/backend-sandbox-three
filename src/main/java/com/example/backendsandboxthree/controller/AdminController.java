@@ -38,11 +38,11 @@ public class AdminController {
     @Autowired
     private CategoryService categoryService;
 
-    @GetMapping("/products/view")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<List<Product>> viewAllProduct() throws ProductException {
-        return new ResponseEntity<List<Product>>(productService.viewAllProduct(), HttpStatus.OK);
-    }
+//    @GetMapping("/products/view")
+//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+//    public ResponseEntity<List<Product>> viewAllProduct() throws ProductException {
+//        return new ResponseEntity<List<Product>>(productService.viewAllProduct(), HttpStatus.OK);
+//    }
 
     @PostMapping("/products/add")
     public ResponseEntity<Product> addProduct(@RequestParam("productName") String productName,
@@ -106,7 +106,7 @@ public class AdminController {
             existingProduct.setCategory(categoryService.getCategoryById(newProductDTO.getCategoryId()).orElse(null));
 
             // Save the updated product
-            Product updatedProduct = productService.updateProduct(existingProduct);
+            Product updatedProduct = productService.updateProduct(existingProduct);//productService.save.(product)
 
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
         } catch (ProductException e) {

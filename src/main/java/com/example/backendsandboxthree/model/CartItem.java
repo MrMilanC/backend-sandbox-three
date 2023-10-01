@@ -22,4 +22,7 @@ public class CartItem {
 
     @Column(name = "quantity_cart", nullable = false)
     private Integer quantityCart;
+
+//    @Column(name="cart_item_price")
+//    private double itemPrice;
 }

@@ -27,27 +27,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .cors(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .formLogin(AbstractHttpConfigurer::disable)
-                //.securityMatcher("/admin/**")
-                .authorizeHttpRequests((registry) -> registry
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/main").permitAll()
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/register/create").permitAll()
-                        //.requestMatchers("/user").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/products/**").permitAll()
-                        .requestMatchers("/admin/**").permitAll()
-                        //.requestMatchers("/admin/**").hasRole("USER") //correct
-                        //.requestMatchers("/admin/**").hasAuthority("ROLE_USER") //correct
-                        //.requestMatchers("/products/**").hasAnyRole("ADMIN", "USER")
-                        //.requestMatchers("/products/**").hasRole("USER")
-                        .anyRequest().authenticated()
-
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .cors(AbstractHttpConfigurer::disable)
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .formLogin(AbstractHttpConfigurer::disable)
+            //.securityMatcher("/admin/**")
+            .authorizeHttpRequests((registry) -> registry
+                     .requestMatchers("/").permitAll()
+                     .requestMatchers("/main").permitAll()
+                     .requestMatchers("/login").permitAll()
+                     .requestMatchers("/register/create").permitAll()
+                     //.requestMatchers("/user").hasAnyRole("ADMIN", "USER")
+                     .requestMatchers("/products/**").permitAll()
+                     .requestMatchers("/admin/**").permitAll()
+                     //.requestMatchers("/admin/**").hasRole("ADMIN") //correct
+                     //.requestMatchers("/products/**").hasAuthority("ROLE_USER")
+                     //.requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") //correct
+                     //.requestMatchers("/products/**").hasAnyRole("ADMIN", "USER")
+                     //.requestMatchers("/products/**").hasRole("USER")
+                     .anyRequest().authenticated()
         );
         return http.build();
     }

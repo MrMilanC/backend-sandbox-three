@@ -29,7 +29,7 @@ public class ProductController {
         return new ResponseEntity<List<Product>>(productService.viewAllProduct(), HttpStatus.OK);
     }
 
-        @GetMapping("view/category/{categoryId}")
+    @GetMapping("view/category/{categoryId}")
     public ResponseEntity<List<Product>> viewProductByCategoryId(@PathVariable("categoryId") Long categoryId)
             throws ProductException {
             System.out.println("gedruckt");

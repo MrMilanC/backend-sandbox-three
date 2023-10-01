@@ -12,11 +12,13 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
+    //@OneToMany(mappedBy = "category_id")
     private Long categoryId;
 
+    //@OneToMany(mappedBy = "category_name")
     private String categoryName;
 
-    //@JsonIgnore
-    @OneToMany(mappedBy = "category")
-    private List<Product> productList;
+//    @JsonIgnore
+//    @OneToMany(mappedBy = "category")
+//    private List<Product> productList;
 }

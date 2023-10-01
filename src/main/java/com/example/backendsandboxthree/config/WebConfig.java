@@ -15,7 +15,7 @@ public class WebConfig implements WebMvcConfigurer {
                 //.allowedOrigins("*")
                 .allowedOrigins("http://localhost:63343")
                 .allowedMethods("*")
-                .allowedHeaders("*")
-                .allowCredentials(true);
+                .allowedHeaders("*");
+                //.allowCredentials(true);
     }
 }

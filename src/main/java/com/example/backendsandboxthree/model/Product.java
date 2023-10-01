@@ -20,9 +20,10 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
+//    @OneToOne(mappedBy = "item")
+//    CartItem cartItem;
+
 //    @ManyToOne //(cascade = CascadeType.ALL)
 //    //@JoinColumn (name = "category_id", referencedColumnName = "category_id")
 //    private Category category;
-
-
 }

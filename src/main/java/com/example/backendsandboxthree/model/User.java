@@ -20,7 +20,7 @@ public class User {
     @JsonIgnore
     private String password;
     private String role;
-    @JsonIgnore
+    //@JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     private Cart cart;
 
