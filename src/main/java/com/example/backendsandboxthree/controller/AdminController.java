@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -92,6 +93,16 @@ public class AdminController {
 //        return new ResponseEntity<Product>(newProduct, HttpStatus.OK);
 //    }
 
+//    @PutMapping
+//    public ResponseEntity<NewProductDTO> update(@Validated @RequestBody NewProductDTO newProductDTO) {
+//        try {
+//            return ResponseEntity.ok(productService.update(newProductDTO).convertToDto());
+//        } catch (ProductException e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        }
+//    }
+
     @PutMapping("/update/{productId}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long productId, @RequestBody NewProductDTO newProductDTO) {
         try {
@@ -121,10 +132,10 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/products/view/{productId}")
-    public ResponseEntity<Product> viewProductById(@PathVariable("productId") Long productId) throws ProductException {
-        return new ResponseEntity<Product>(productService.viewProduct(productId), HttpStatus.OK);
-    }
+//    @GetMapping("/products/view/{productId}")
+//    public ResponseEntity<Product> viewProductById(@PathVariable("productId") Long productId) throws ProductException {
+//        return new ResponseEntity<Product>(productService.viewProduct(productId), HttpStatus.OK);
+//    }
 
     @DeleteMapping("/products/remove/{productId}")  //DONE
     public ResponseEntity<Product> removeProductById(@PathVariable("productId") Long productId)
@@ -169,11 +180,11 @@ public class AdminController {
         return new ResponseEntity<>("User is registered successfully!", HttpStatus.OK);
     }
 
-    @GetMapping("/users/get")
-    //@PreAuthorize("hasRole('ADMIN')")
-    public List<User> getAllCategories () {
-        return userRepository.findAll();
-    }
+//    @GetMapping("/users/get")
+//    //@PreAuthorize("hasRole('ADMIN')")
+//    public List<User> getAllCategories () {
+//        return userRepository.findAll();
+//    }
 
     @DeleteMapping("/users/remove/{userId}")  //DONE
     public ResponseEntity<User> removeUserById(@PathVariable("userId") Long userId)

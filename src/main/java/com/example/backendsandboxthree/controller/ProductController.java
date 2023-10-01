@@ -29,6 +29,11 @@ public class ProductController {
         return new ResponseEntity<List<Product>>(productService.viewAllProduct(), HttpStatus.OK);
     }
 
+    @GetMapping("/view/{productId}")
+    public ResponseEntity<Product> viewProductById(@PathVariable("productId") Long productId) throws ProductException {
+        return new ResponseEntity<Product>(productService.viewProduct(productId), HttpStatus.OK);
+    }
+
     @GetMapping("view/category/{categoryId}")
     public ResponseEntity<List<Product>> viewProductByCategoryId(@PathVariable("categoryId") Long categoryId)
             throws ProductException {

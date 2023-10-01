@@ -1,5 +1,6 @@
 package com.example.backendsandboxthree.service;
 
+import com.example.backendsandboxthree.dto.NewProductDTO;
 import com.example.backendsandboxthree.exception.ProductException;
 import com.example.backendsandboxthree.model.Category;
 import com.example.backendsandboxthree.model.Product;
@@ -32,6 +33,16 @@ public class ProductService {
     public Product addProduct(Product product) throws ProductException, IOException {
         return productRepository.save(product);
     }
+
+//    public NewProductDTO update(NewProductDTO newProductDTO) throws ProductException {
+//        var toUpdate = this.productRepository.findById(newProductDTO.getProductId())
+//                .orElseThrow(() -> new ProductException("Product with the given ID does not exist"));
+//        if (newProductDTO.getProductName().isEmpty()) {
+//            throw new IllegalArgumentException("The name of the product cannot be empty");
+//        }
+//        toUpdate.setProductName(newProductDTO.getProductName());
+//        return this.productRepository.save(toUpdate);
+//    }
 
     public Product updateProduct(Product product) throws ProductException {
         Optional<Product> productUpdate = productRepository.findById(product.getProductId());
