@@ -35,7 +35,6 @@ public class SecurityConfig {
             //.securityMatcher("/admin/**")
             .authorizeHttpRequests((registry) -> registry
                      .requestMatchers("/").permitAll()
-                     .requestMatchers("/main").permitAll()
                      .requestMatchers("/login").permitAll()
                      .requestMatchers("/register/create").permitAll()
                      //.requestMatchers("/user").hasAnyRole("ADMIN", "USER")
