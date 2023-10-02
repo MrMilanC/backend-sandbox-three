@@ -35,8 +35,8 @@ public class AdminController {
 
     /////////////////////Product Section
 
-    public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img";
-    //public static String uploadDir = "http://localhost:63343/frontend-webshop-main/img/user-files";
+    //public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img";
+    public static String uploadDir = "C:/Users/milan/WebstormProjects/frontend-webshop-main/img/user-files";
 
     @Autowired
     private ProductService productService;
