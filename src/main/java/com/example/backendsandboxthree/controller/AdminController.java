@@ -1,6 +1,5 @@
 package com.example.backendsandboxthree.controller;
 
-import com.example.backendsandboxthree.dto.NewProductDTO;
 import com.example.backendsandboxthree.dto.NewUserDTO;
 import com.example.backendsandboxthree.exception.ProductException;
 import com.example.backendsandboxthree.exception.UserException;
@@ -30,7 +29,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin")
 //@CrossOrigin(origins = "*")
-@CrossOrigin(origins = "http://localhost:63343")
+//@CrossOrigin(origins = "http://localhost:63343")
+@CrossOrigin(origins = "http://localhost:63343", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE}, allowedHeaders = "*")
 public class AdminController {
 
     /////////////////////Product Section
@@ -65,7 +65,6 @@ public class AdminController {
             imageUUID = imageName;
         }
         product.setImageName(imageUUID);
-        //productService.addProduct(product);
 
         Product newProduct = productService.addProduct(product);
 
@@ -78,26 +77,18 @@ public class AdminController {
                                                  @RequestParam("productDescription") String productDescription,
                                                  @RequestParam("productQuantity") double productQuantity,
                                                  @RequestParam("categoryId") Long categoryId,
-                                                 //@RequestParam(name = "categoryId", required = false) Category categoryId,
                                                  @RequestParam("productImage") MultipartFile imageFile,
                                                  @RequestParam("imageName") String imageName) throws ProductException, IOException {
 
-            // Retrieve the existing product by its ID
-            Product existingProduct = productService.getProductById(productId)
-                    .orElseThrow(() -> new ProductException("Product not found with ID: " + productId));
+        // Retrieve the existing product by its ID
+        Product existingProduct = productService.getProductById(productId)
+                .orElseThrow(() -> new ProductException("Product not found with ID: " + productId));
 
-            // Update the existing product with data from the DTO
-
+        // Update the existing product with data from the input
         existingProduct.setProductName(productName);
         existingProduct.setPrice(productPrice);
         existingProduct.setDescription(productDescription);
         existingProduct.setQuantity(productQuantity);
- //       existingProduct.setCategory(categoryId);
-
-//        newProductDTO.setCategoryId(product.get().getCategory().getCategoryId());
-//
-//        existingProduct.setImageName(newProductDTO.getImageName());
-
         existingProduct.setCategory(categoryService.getCategoryById(categoryId).orElse(null));
 
         String imageUUID;
@@ -116,7 +107,7 @@ public class AdminController {
 
     }
 
-        @DeleteMapping("/products/remove/{productId}")
+    @DeleteMapping("/products/remove/{productId}")
     public ResponseEntity<Product> removeProductById(@PathVariable("productId") Long productId)
             throws ProductException {
         return new ResponseEntity<Product>(productService.removeProduct(productId), HttpStatus.OK);
@@ -139,6 +130,11 @@ public class AdminController {
         return new ResponseEntity<List<User>>(userService.viewAllUser(), HttpStatus.OK);
     }
 
+    @GetMapping("/users/view/{userId}")
+    public ResponseEntity<User> viewUserById(@PathVariable("userId") Long userId) throws UserException {
+        return new ResponseEntity<User>(userService.viewUser(userId), HttpStatus.OK);
+    }
+
     @PostMapping("/users/create")
     public ResponseEntity<?> createUser(@RequestBody @Valid NewUserDTO newUserDTO) throws UserException {
 
@@ -157,6 +153,30 @@ public class AdminController {
 
         userService.addUser(user);
         return new ResponseEntity<>("User is registered successfully!", HttpStatus.OK);
+    }
+
+    @PutMapping("/users/update/{userId}")
+    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestParam("userFirstName") String userFirstName,
+                                        @RequestParam("userLastName") String userLastName,
+                                        @RequestParam("userUserName") String userUserName,
+                                        @RequestParam("userPassword") String userPassword,
+                                        @RequestParam("userEmail") String userEmail,
+                                        @RequestParam("userRole") String userRole) throws UserException, IOException {
+
+        User existingUser = userService.getUserById(userId)
+                .orElseThrow(() -> new UserException("Product not found with ID: " + userId));
+
+
+        existingUser.setFirstName(userFirstName);
+        existingUser.setLastName(userLastName);
+        existingUser.setUsername(userUserName);
+        existingUser.setPassword(userPassword);
+        existingUser.setEmail(userEmail);
+        existingUser.setRole(userRole);
+
+        User updatedUser = userService.updateUser(existingUser);
+
+        return new ResponseEntity<User>(updatedUser, HttpStatus.OK);
     }
 
     @DeleteMapping("/users/remove/{userId}")

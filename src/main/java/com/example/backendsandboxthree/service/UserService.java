@@ -1,7 +1,9 @@
 package com.example.backendsandboxthree.service;
 
+import com.example.backendsandboxthree.exception.ProductException;
 import com.example.backendsandboxthree.exception.UserException;
 //import com.example.backendsandboxthree.model.Cart;
+import com.example.backendsandboxthree.model.Product;
 import com.example.backendsandboxthree.model.User;
 import com.example.backendsandboxthree.repository.CartRepository;
 import com.example.backendsandboxthree.repository.UserRepository;
@@ -92,5 +94,18 @@ public class UserService {
         } else {
             throw new UserException("customer not found");
         }
+    }
+
+    public User viewUser(Long userId) throws UserException {
+        Optional<User> opt = userRepository.findById(userId);
+        if (opt.isPresent()) {
+            return opt.get();
+        } else {
+            throw new UserException("User not found with user id - " + userId);
+        }
+    }
+
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
     }
 }
