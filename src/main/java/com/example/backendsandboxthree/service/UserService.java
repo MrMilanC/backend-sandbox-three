@@ -76,17 +76,6 @@ public class UserService {
         return userRemoved;
     }
 
-//    public User removeUser(Long userId) throws UserException {
-//        Optional<User> opt = userRepository.findById(userId);
-//        if (opt.isPresent()) {
-//            User c = opt.get();
-//            userRepository.delete(c);
-//            return c;
-//        } else {
-//            throw new UserException("Customer not found with cid - " + userId);
-//        }
-//    }
-
     public List<User> viewAllUser() throws UserException {
         List<User> users = userRepository.findAll();
         if (users.size() > 0) {

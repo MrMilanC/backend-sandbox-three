@@ -34,16 +34,6 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-//    public NewProductDTO update(NewProductDTO newProductDTO) throws ProductException {
-//        var toUpdate = this.productRepository.findById(newProductDTO.getProductId())
-//                .orElseThrow(() -> new ProductException("Product with the given ID does not exist"));
-//        if (newProductDTO.getProductName().isEmpty()) {
-//            throw new IllegalArgumentException("The name of the product cannot be empty");
-//        }
-//        toUpdate.setProductName(newProductDTO.getProductName());
-//        return this.productRepository.save(toUpdate);
-//    }
-
     public Product updateProduct(Product product) throws ProductException {
         Optional<Product> productUpdate = productRepository.findById(product.getProductId());
         if (productUpdate.isPresent()) {

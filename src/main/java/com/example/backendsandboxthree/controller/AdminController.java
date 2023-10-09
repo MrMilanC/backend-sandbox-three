@@ -116,7 +116,7 @@ public class AdminController {
 
     //////////////////////User Section
 
-    @Autowired //erstellt automatisch Repository
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private UserService userService;

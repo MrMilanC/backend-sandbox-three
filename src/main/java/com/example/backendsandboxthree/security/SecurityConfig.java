@@ -19,9 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -45,14 +43,11 @@ public class SecurityConfig {
                      .requestMatchers("/").permitAll()
                      .requestMatchers("/login").permitAll()
                      .requestMatchers("/register/create").permitAll()
-                     //.requestMatchers("/user").hasAnyRole("ADMIN", "USER")
                      .requestMatchers("/products/**").permitAll()
-                     //.requestMatchers("/admin/**").permitAll()
-                     .requestMatchers("/admin/**").hasRole("ADMIN") //correct
-                     //.requestMatchers("/products/**").hasAuthority("ROLE_USER")
-                     //.requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") //correct
-                     //.requestMatchers("/products/**").hasAnyRole("ADMIN", "USER")
-                     //.requestMatchers("/products/**").hasRole("USER")
+                    .requestMatchers("/cart/**").permitAll()
+                     .requestMatchers("/admin/**").hasRole("ADMIN")
+                     //.requestMatchers("/user").hasAnyRole("ADMIN", "USER")
+                     //.requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                      .anyRequest().authenticated()
         );
         return http.build();

@@ -15,8 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RestController
 @RequestMapping("/register")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = "http://localhost:63343")
-//@CrossOrigin(origins = "*")
 @CrossOrigin(origins = "http://localhost:63343", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE}, allowedHeaders = "*")
 public class RegisterController {
 

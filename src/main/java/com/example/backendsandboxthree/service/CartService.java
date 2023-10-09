@@ -3,10 +3,7 @@ package com.example.backendsandboxthree.service;
 import com.example.backendsandboxthree.exception.CartException;
 import com.example.backendsandboxthree.exception.ProductException;
 import com.example.backendsandboxthree.exception.UserException;
-import com.example.backendsandboxthree.model.Cart;
-import com.example.backendsandboxthree.model.CartItem;
-import com.example.backendsandboxthree.model.Product;
-import com.example.backendsandboxthree.model.User;
+import com.example.backendsandboxthree.model.*;
 import com.example.backendsandboxthree.repository.CartRepository;
 import com.example.backendsandboxthree.repository.ProductRepository;
 import com.example.backendsandboxthree.repository.UserRepository;
@@ -25,6 +22,26 @@ public class CartService {
     private UserRepository userRepository;
     @Autowired
     private ProductRepository productRepository;
+
+    public Cart saveCart (String username) throws UserException {
+
+//        Optional<User> userOpt = userRepository.findByUsername(username.getUserName());
+        User userOpt = userRepository.findByUsername(username).orElseThrow(RuntimeException::new);
+//        if (userOpt.isEmpty()) {
+//            throw new UserException("User not found!");
+//        }
+
+        Long userId = userOpt.getId();
+
+        Cart shoppingCart = new Cart();
+        shoppingCart.setUserId(userId);
+
+        return cartRepository.save(shoppingCart);
+    }
+
+    public Cart findByUserId(Long userId) {
+        return cartRepository.findByUserId(userId);
+    }
 
     public Cart addProductToCart(Long userId, Long productId)
             throws CartException, UserException, ProductException {
