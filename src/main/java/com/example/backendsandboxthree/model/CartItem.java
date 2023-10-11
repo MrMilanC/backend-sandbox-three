@@ -1,5 +1,6 @@
 package com.example.backendsandboxthree.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,10 +15,12 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "cart_id", nullable = false)
 //    @JsonManagedReference
+    @JsonIgnore
     private Cart cart;
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
+    //@JsonIgnore
     private Product product;
 
     @Column(name = "quantity_cart", nullable = false)

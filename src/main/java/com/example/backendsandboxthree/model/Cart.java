@@ -1,5 +1,6 @@
 package com.example.backendsandboxthree.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -25,6 +26,7 @@ public class Cart {
     @OneToMany(mappedBy = "cart")
     private List<CartItem> cartItems;
 
-    //@OneToOne(mappedBy = "cart")//@OneToOne//(cascade = CascadeType.ALL)
-    private Long userId;
+    @OneToOne(mappedBy = "cart", cascade = CascadeType.REMOVE)//@OneToOne//(cascade = CascadeType.ALL)
+    @JsonIgnore
+    private User user;
 }

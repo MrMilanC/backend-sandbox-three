@@ -8,13 +8,19 @@ import com.example.backendsandboxthree.repository.CategoryRepository;
 import com.example.backendsandboxthree.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ProductService {
+
+    public static String uploadDir = "C:/Users/milan/WebstormProjects/frontend-webshop-main/img/user-files";
 
     @Autowired
     private ProductRepository productRepository;
@@ -30,7 +36,17 @@ public class ProductService {
         }
     }
 
-    public Product addProduct(Product product) throws ProductException, IOException {
+    public Product addProduct(Product product, MultipartFile imageFile) throws ProductException, IOException {
+        String imageUUID;
+        if (!imageFile.isEmpty()) {
+            imageUUID = imageFile.getOriginalFilename();
+            Path fileNameandPath = Paths.get(uploadDir, imageUUID);
+            Files.write(fileNameandPath, imageFile.getBytes());
+        } else {
+            throw new ProductException("Image file is empty");
+        }
+        product.setImageName(imageUUID);
+
         return productRepository.save(product);
     }
 

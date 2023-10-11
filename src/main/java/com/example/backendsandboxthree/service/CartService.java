@@ -3,7 +3,11 @@ package com.example.backendsandboxthree.service;
 import com.example.backendsandboxthree.exception.CartException;
 import com.example.backendsandboxthree.exception.ProductException;
 import com.example.backendsandboxthree.exception.UserException;
-import com.example.backendsandboxthree.model.*;
+import com.example.backendsandboxthree.model.Cart;
+import com.example.backendsandboxthree.model.CartItem;
+import com.example.backendsandboxthree.model.Product;
+import com.example.backendsandboxthree.model.User;
+import com.example.backendsandboxthree.repository.CartItemRepository;
 import com.example.backendsandboxthree.repository.CartRepository;
 import com.example.backendsandboxthree.repository.ProductRepository;
 import com.example.backendsandboxthree.repository.UserRepository;
@@ -19,12 +23,13 @@ public class CartService {
     @Autowired
     private CartRepository cartRepository;
     @Autowired
+    private CartItemRepository cartItemRepository;
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private ProductRepository productRepository;
 
-    public Cart saveCart (String username) throws UserException {
-
+    public Cart saveCart(String username) throws CartException {
 //        Optional<User> userOpt = userRepository.findByUsername(username.getUserName());
         User userOpt = userRepository.findByUsername(username).orElseThrow(RuntimeException::new);
 //        if (userOpt.isEmpty()) {
@@ -34,28 +39,46 @@ public class CartService {
         Long userId = userOpt.getId();
 
         Cart shoppingCart = new Cart();
-        shoppingCart.setUserId(userId);
+        User user = userRepository.findById(userId).get();
+        user.setCart(shoppingCart);
+        shoppingCart.setUser(user);
 
         return cartRepository.save(shoppingCart);
+    }
+
+    public Cart viewCart(String username) throws CartException {
+        User userOpt = userRepository.findByUsername(username).orElseThrow(RuntimeException::new);
+        Long userId = userOpt.getId();
+//        if (opt.isPresent()) {
+//            return opt.get();
+//        } else {
+//            throw new CartException("Cart not found with product id - " + username);
+//        }
+        return userOpt.getCart();
     }
 
     public Cart findByUserId(Long userId) {
         return cartRepository.findByUserId(userId);
     }
 
-    public Cart addProductToCart(Long userId, Long productId)
+    public Cart addProductToCart(String userName, Long productId)
             throws CartException, UserException, ProductException {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) {
-            throw new UserException("User not found!");
-        }
+
+//        Optional<User> userOpt = userRepository.findById(userId);
+//        if (userOpt.isEmpty()) {
+//            throw new UserException("User not found!");
+//        }
+
+        User userOpt = userRepository.findByUsername(userName).orElseThrow(RuntimeException::new);
+        //Long userId = userOpt.getId();
+        Long cartId = userOpt.getCart().getId();
 
         Optional<Product> productOpt = productRepository.findById(productId);
         if (productOpt.isEmpty()) {
             throw new ProductException("Product not found!");
         }
 
-        User user = userOpt.get();
+        User user = userRepository.findById(cartId).get();
         Cart cart = user.getCart();
         List<CartItem> cartItems = cart.getCartItems();
 
@@ -66,6 +89,7 @@ public class CartService {
             if (cartItem.getProduct().equals(productOpt.get())) {
                 cartItem.setQuantityCart(cartItem.getQuantityCart() + 1);
                 productFoundInCart = true;
+                cartItemRepository.save(cartItem);
                 break;
             }
         }
@@ -76,6 +100,7 @@ public class CartService {
             newCartItem.setProduct(productOpt.get());
             newCartItem.setQuantityCart(1);
             cartItems.add(newCartItem);
+            cartItemRepository.save(newCartItem);
         }
 
         cart.setCartItems(cartItems);

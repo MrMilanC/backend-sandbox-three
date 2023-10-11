@@ -44,29 +44,20 @@ public class AdminController {
 
     @PostMapping("/products/add")
     public ResponseEntity<Product> addProduct(@RequestParam("productName") String productName,
-                                                    @RequestParam("productPrice") double productPrice,
-                                                    @RequestParam("productDescription") String productDescription,
-                                                    @RequestParam("productQuantity") double productQuantity,
-                                                    @RequestParam("categoryId") Category categoryId,
-                                                    @RequestParam("productImage") MultipartFile imageFile,
-                                                    @RequestParam("imageName") String imageName) throws ProductException, IOException {
+                                              @RequestParam("productPrice") double productPrice,
+                                              @RequestParam("productDescription") String productDescription,
+                                              @RequestParam("productQuantity") double productQuantity,
+                                              @RequestParam("categoryId") Category categoryId,
+                                              @RequestParam("productImage") MultipartFile imageFile,
+                                              @RequestParam("imageName") String imageName) throws ProductException, IOException {
         Product product = new Product();
         product.setProductName(productName);
         product.setPrice(productPrice);
         product.setDescription(productDescription);
         product.setQuantity(productQuantity);
         product.setCategory(categoryId);
-        String imageUUID;
-        if(!imageFile.isEmpty()){
-            imageUUID = imageFile.getOriginalFilename();
-            Path fileNameandPath = Paths.get(uploadDir, imageUUID);
-            Files.write(fileNameandPath, imageFile.getBytes());
-        } else {
-            imageUUID = imageName;
-        }
-        product.setImageName(imageUUID);
 
-        Product newProduct = productService.addProduct(product);
+        Product newProduct = productService.addProduct(product, imageFile);
 
         return new ResponseEntity<Product>(newProduct, HttpStatus.OK);
     }

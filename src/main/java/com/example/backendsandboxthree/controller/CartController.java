@@ -4,6 +4,7 @@ import com.example.backendsandboxthree.exception.CartException;
 import com.example.backendsandboxthree.exception.ProductException;
 import com.example.backendsandboxthree.exception.UserException;
 import com.example.backendsandboxthree.model.Cart;
+import com.example.backendsandboxthree.model.Product;
 import com.example.backendsandboxthree.service.CartService;
 import com.example.backendsandboxthree.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +27,19 @@ public class CartController {
 
     @ResponseStatus(code = CREATED)
     @PostMapping("/create/{userName}")
-    public Cart create(@PathVariable String userName) throws UserException {
-        return cartService.saveCart (userName);
+    public ResponseEntity<Cart> create(@PathVariable String userName) throws UserException, CartException {
+        return  new ResponseEntity<Cart>(cartService.saveCart(userName), HttpStatus.OK);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<Cart> addProductToCart(@RequestParam("cartId") Long cartId,
-                                                 @RequestParam("productId") Long productId) throws CartException, UserException, ProductException {
-        return new ResponseEntity<Cart>(cartService.addProductToCart(cartId, productId), HttpStatus.OK);
+    @GetMapping("/view/{userName}")
+    public ResponseEntity<Cart> viewCartById(@PathVariable("userName") String userName) throws CartException {
+        return new ResponseEntity<Cart>(cartService.viewCart(userName), HttpStatus.OK);
+    }
+
+    @PostMapping("/add/{productId}")
+    public ResponseEntity<Cart> addProductToCart(@RequestParam("userName") String userName,
+                                                 @PathVariable("productId") Long productId) throws CartException, UserException, ProductException {
+        return new ResponseEntity<Cart>(cartService.addProductToCart(userName, productId), HttpStatus.OK);
 
     }
 
