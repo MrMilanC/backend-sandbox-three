@@ -3,8 +3,10 @@ package com.example.backendsandboxthree.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+//@ToString
 @Entity(name = "cart_item")
 public class CartItem {
     @Id
@@ -28,4 +30,15 @@ public class CartItem {
 
 //    @Column(name="cart_item_price")
 //    private double itemPrice;
+
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "cartItemId=" + cartItemId +
+                ", cart=" + cart.getId() +
+                ", product=" + product.getProductId() +
+                ", quantityCart=" + quantityCart +
+                '}';
+    }
+
 }

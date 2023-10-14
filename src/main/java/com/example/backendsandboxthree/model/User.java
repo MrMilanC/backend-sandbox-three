@@ -3,10 +3,12 @@ package com.example.backendsandboxthree.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
 @Data
+//@ToString
 @Entity
 public class User {
 
@@ -24,5 +26,18 @@ public class User {
     //@JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     private Cart cart;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
+                '}';
+    }
+
 }
 

@@ -43,17 +43,17 @@ public class CartController {
 
     }
 
-    @DeleteMapping("/remove/{cartId}/{productId}")
-    public ResponseEntity<Cart> removeProductFromCart(@PathVariable("cartId") Long cartId,
+    @DeleteMapping("/remove/{productId}")
+    public ResponseEntity<Cart> removeProductFromCart(@RequestParam("userName") String userName,
                                                       @PathVariable("productId") Long productId) throws CartException, UserException, ProductException {
-        return new ResponseEntity<Cart>(cartService.removeProductFromCart(cartId, productId), HttpStatus.OK);
+        return new ResponseEntity<Cart>(cartService.removeProductFromCart(userName, productId), HttpStatus.OK);
     }
 
-    @DeleteMapping("/remove/{cartId}")
-    public ResponseEntity<Cart> removeAllProduct(@PathVariable("cartId") Long cartId)
-            throws CartException, UserException {
-        return new ResponseEntity<Cart>(cartService.removeAllProduct(cartId), HttpStatus.OK);
-    }
+//    @DeleteMapping("/remove/{cartId}")
+//    public ResponseEntity<Cart> removeAllProduct(@PathVariable("cartId") Long cartId)
+//            throws CartException, UserException {
+//        return new ResponseEntity<Cart>(cartService.removeAllProduct(cartId), HttpStatus.OK);
+//    }
 
     @PutMapping("/increase/{cartId}/{productId}")
     public ResponseEntity<Cart> increaseProductQuantity(@PathVariable("cartId") Long cartId,

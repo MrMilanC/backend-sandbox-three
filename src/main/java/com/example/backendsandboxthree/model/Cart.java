@@ -3,10 +3,12 @@ package com.example.backendsandboxthree.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.List;
 
 @Data
+//@ToString
 @Entity
 public class Cart {
 
@@ -29,4 +31,13 @@ public class Cart {
     @OneToOne(mappedBy = "cart", cascade = CascadeType.REMOVE)//@OneToOne//(cascade = CascadeType.ALL)
     @JsonIgnore
     private User user;
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "id=" + id +
+                ", user=" + user +
+                '}';
+    }
+
 }

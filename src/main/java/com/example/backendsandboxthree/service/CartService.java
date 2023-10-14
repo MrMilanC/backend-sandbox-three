@@ -30,13 +30,14 @@ public class CartService {
     private ProductRepository productRepository;
 
     public Cart saveCart(String username) throws CartException {
-//        Optional<User> userOpt = userRepository.findByUsername(username.getUserName());
+
         User userOpt = userRepository.findByUsername(username).orElseThrow(RuntimeException::new);
-//        if (userOpt.isEmpty()) {
-//            throw new UserException("User not found!");
-//        }
 
         Long userId = userOpt.getId();
+        Cart cartOpt = cartRepository.findByUserId(userId);
+        if (!(cartOpt == null)) {
+            return cartOpt;
+        }
 
         Cart shoppingCart = new Cart();
         User user = userRepository.findById(userId).get();
@@ -47,30 +48,21 @@ public class CartService {
     }
 
     public Cart viewCart(String username) throws CartException {
+
         User userOpt = userRepository.findByUsername(username).orElseThrow(RuntimeException::new);
         Long userId = userOpt.getId();
-//        if (opt.isPresent()) {
-//            return opt.get();
-//        } else {
-//            throw new CartException("Cart not found with product id - " + username);
-//        }
-        return userOpt.getCart();
+        Cart cartOpt = cartRepository.findByUserId(userId);
+
+        return cartOpt;
     }
 
     public Cart findByUserId(Long userId) {
         return cartRepository.findByUserId(userId);
     }
 
-    public Cart addProductToCart(String userName, Long productId)
-            throws CartException, UserException, ProductException {
-
-//        Optional<User> userOpt = userRepository.findById(userId);
-//        if (userOpt.isEmpty()) {
-//            throw new UserException("User not found!");
-//        }
+    public Cart addProductToCart(String userName, Long productId) throws CartException, UserException, ProductException {
 
         User userOpt = userRepository.findByUsername(userName).orElseThrow(RuntimeException::new);
-        //Long userId = userOpt.getId();
         Long cartId = userOpt.getCart().getId();
 
         Optional<Product> productOpt = productRepository.findById(productId);
@@ -108,21 +100,29 @@ public class CartService {
         return cart;
     }
 
-    public Cart removeProductFromCart(Long userId, Long productId)
+    public Cart removeProductFromCart(String userName, Long productId)
             throws CartException, UserException, ProductException {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) {
-            throw new UserException("User not found!");
-        }
+        System.out.println(userName);
+        User userOpt = userRepository.findByUsername(userName).orElseThrow(RuntimeException::new);
+        System.out.println(userOpt);
+        //Long cartId = userOpt.getCart().getId();
+        //System.out.println("user is: " + userOpt);
 
         Optional<Product> productOpt = productRepository.findById(productId);
         if (productOpt.isEmpty()) {
             throw new ProductException("Product not found!");
         }
 
-        User user = userOpt.get();
-        Cart cart = user.getCart();
+        Long userId = userOpt.getId();
+        Cart cart = cartRepository.findByUserId(userId);
+        System.out.println(cart);
+
+        //System.out.println("broj kolica je: " + cart.getId());
+
+        //User user = userRepository.findById(cartId).get();
+        //Cart cart = userOpt.getCart();
         List<CartItem> cartItems = cart.getCartItems();
+        cartItems.stream().forEach(System.out::println);
 
         boolean productFoundInCart = false;
         CartItem cartItemToRemove = null;
@@ -132,6 +132,7 @@ public class CartService {
             if (cartItem.getProduct().equals(productOpt.get())) {
                 if (cartItem.getQuantityCart() > 1) {
                     cartItem.setQuantityCart(cartItem.getQuantityCart() - 1);
+                    //cartItemToRemove = cartItem;
                 } else {
                     cartItemToRemove = cartItem;
                 }
@@ -140,11 +141,33 @@ public class CartService {
             }
         }
 
-        if (productFoundInCart) {
-            cartItems.remove(cartItemToRemove);
-        } else {
-            throw new CartException("Product not found in the cart");
+        if (cartItemToRemove != null) {
+            if (productFoundInCart) {
+                //System.out.println("wird gelöscht" + cartItemToRemove.toString());
+
+                cartItems.remove(cartItemToRemove);
+                cartItemRepository.delete(cartItemToRemove);
+
+                //System.out.println(("zweite reihe"));
+                //cartItems.stream().forEach(System.out::println);
+            } else {
+                throw new CartException("Product not found in the cart");
+            }
         }
+
+//        if (productFoundInCart) {
+//            if (cartItemToRemove != null) {
+//                System.out.println("wird gelöscht" + cartItemToRemove.toString());
+//                cartItems.remove(cartItemToRemove);
+//                cartItemRepository.delete(cartItemToRemove);
+//                System.out.println(("zweite reihe"));
+//                cartItems.stream().forEach(System.out::println);
+//            } else {
+//                throw new CartException("CartItem to remove is null");
+//            }
+//        } else {
+//            throw new CartException("Product not found in the cart");
+//        }
 
         cart.setCartItems(cartItems);
         cartRepository.save(cart);
