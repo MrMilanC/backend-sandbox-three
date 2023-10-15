@@ -99,14 +99,12 @@ public class AdminController {
     }
 
     @DeleteMapping("/products/remove/{productId}")
-    public ResponseEntity<Product> removeProductById(@PathVariable("productId") Long productId)
-            throws ProductException {
+    public ResponseEntity<Product> removeProductById(@PathVariable("productId") Long productId) throws ProductException {
         return new ResponseEntity<Product>(productService.removeProduct(productId), HttpStatus.OK);
     }
 
 
     //////////////////////User Section
-
     @Autowired
     private UserRepository userRepository;
     @Autowired

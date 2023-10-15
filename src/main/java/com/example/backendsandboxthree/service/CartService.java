@@ -148,7 +148,7 @@ public class CartService {
 
         User userOpt = userRepository.findByUsername(userName).orElseThrow(RuntimeException::new);
         Cart cart = userOpt.getCart();
-        List <CartItem> cartItems = cart.getCartItems();
+        List<CartItem> cartItems = cart.getCartItems();
 
         // Delete all cart items from the database
         for (CartItem cartItem : cartItems) {
@@ -161,6 +161,32 @@ public class CartService {
 
         cartRepository.save(cart);
         return cart;
+    }
+
+    public Integer viewCartItemQuantity(String username, Long productId) throws CartException, ProductException {
+
+        Integer quantity = 0;
+
+        Optional<Product> productOpt = productRepository.findById(productId);
+        if (productOpt.isEmpty()) {
+            throw new ProductException("Product not found!");
+        }
+
+        User userOpt = userRepository.findByUsername(username).orElseThrow(RuntimeException::new);
+        Long userId = userOpt.getId();
+        Cart cartOpt = cartRepository.findByUserId(userId);
+        List<CartItem> cartItems = cartOpt.getCartItems();
+
+        for (CartItem cartItem : cartItems) {
+            System.out.println("cartitem " + cartItem.getProduct().getProductId());
+            System.out.println("productid " + productOpt.get().getProductId());
+            if (cartItem.getProduct().getProductId().equals(productOpt.get().getProductId())) {
+                quantity += cartItem.getQuantityCart();
+                System.out.println("ANFANG " + quantity);
+                //break;
+            }
+        }
+        return quantity;
     }
 
 //    public Cart increaseProductQuantity(Long userId, Long productId)

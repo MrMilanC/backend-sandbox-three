@@ -4,7 +4,9 @@ import com.example.backendsandboxthree.exception.CartException;
 import com.example.backendsandboxthree.exception.ProductException;
 import com.example.backendsandboxthree.exception.UserException;
 import com.example.backendsandboxthree.model.Cart;
+import com.example.backendsandboxthree.model.CartItem;
 import com.example.backendsandboxthree.model.Product;
+import com.example.backendsandboxthree.service.CartItemService;
 import com.example.backendsandboxthree.service.CartService;
 import com.example.backendsandboxthree.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,6 @@ public class CartController {
 
     @Autowired
     private CartService cartService;
-
     @Autowired
     private UserService userService;
 
@@ -52,6 +53,18 @@ public class CartController {
     public ResponseEntity<Cart> removeAllProduct(@RequestParam("userName") String userName) throws CartException, UserException, ProductException {
         return new ResponseEntity<Cart>(cartService.removeAllProduct(userName), HttpStatus.OK);
     }
+
+    @GetMapping("/cartitem-quantity/{productId}")
+    public ResponseEntity<Integer> viewCartItemQuantity(@RequestParam("userName") String userName,
+                                                        @PathVariable("productId") Long productId) throws CartException, UserException, ProductException {
+        return new ResponseEntity<Integer>(cartService.viewCartItemQuantity(userName, productId), HttpStatus.OK);
+    }
+
+//    @GetMapping("/cartitem-quantity/{userName}")
+//    public ResponseEntity<Integer> viewCartItemQuantity(@RequestParam("userName") String userName,
+//                                                        @PathVariable("productId") Long productId) throws CartException, UserException, ProductException {
+//        return new ResponseEntity<Integer>(cartService.viewCart(userName).getCartItems(), HttpStatus.OK);
+//    }
 
 //    @DeleteMapping("/remove/{cartId}")
 //    public ResponseEntity<Cart> removeAllProduct(@PathVariable("cartId") Long cartId)
