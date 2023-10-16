@@ -56,10 +56,6 @@ public class CartService {
         return cartOpt;
     }
 
-//    public Cart findByUserId(Long userId) {
-//        return cartRepository.findByUserId(userId);
-//    }
-
     public Cart addProductToCart(String userName, Long productId) throws CartException, UserException, ProductException {
 
         User userOpt = userRepository.findByUsername(userName).orElseThrow(RuntimeException::new);
@@ -178,92 +174,11 @@ public class CartService {
         List<CartItem> cartItems = cartOpt.getCartItems();
 
         for (CartItem cartItem : cartItems) {
-            System.out.println("cartitem " + cartItem.getProduct().getProductId());
-            System.out.println("productid " + productOpt.get().getProductId());
             if (cartItem.getProduct().getProductId().equals(productOpt.get().getProductId())) {
                 quantity += cartItem.getQuantityCart();
-                System.out.println("ANFANG " + quantity);
-                //break;
             }
         }
         return quantity;
     }
-
-//    public Cart increaseProductQuantity(Long userId, Long productId)
-//            throws CartException, UserException, ProductException {
-//        Optional<User> userOpt = userRepository.findById(userId);
-//        if (userOpt.isEmpty()) {
-//            throw new UserException("User not found!");
-//        }
-//
-//        Optional<Product> productOpt = productRepository.findById(productId);
-//        if (productOpt.isEmpty()) {
-//            throw new ProductException("Product not found!");
-//        }
-//
-//        User user = userOpt.get();
-//        Cart cart = user.getCart();
-//        List<CartItem> cartItems = cart.getCartItems();
-//
-//        boolean productFoundInCart = false;
-//
-//        // Find the cart item to increase quantity
-//        for (CartItem cartItem : cartItems) {
-//            if (cartItem.getProduct().equals(productOpt.get())) {
-//                cartItem.setQuantityCart(cartItem.getQuantityCart() + 1);
-//                productFoundInCart = true;
-//                break;
-//            }
-//        }
-//
-//        if (!productFoundInCart) {
-//            throw new CartException("Product not found in the cart");
-//        }
-//
-//        cart.setCartItems(cartItems);
-//        cartRepository.save(cart);
-//        return cart;
-//    }
-//
-//    public Cart decreaseProductQuantity(Long userId, Long productId)
-//            throws CartException, UserException, ProductException {
-//        Optional<User> userOpt = userRepository.findById(userId);
-//        if (userOpt.isEmpty()) {
-//            throw new UserException("User not found!");
-//        }
-//
-//        Optional<Product> productOpt = productRepository.findById(productId);
-//        if (productOpt.isEmpty()) {
-//            throw new ProductException("Product not found!");
-//        }
-//
-//        User user = userOpt.get();
-//        Cart cart = user.getCart();
-//        List<CartItem> cartItems = cart.getCartItems();
-//
-//        boolean productFoundInCart = false;
-//
-//        // Find the cart item to decrease quantity
-//        for (CartItem cartItem : cartItems) {
-//            if (cartItem.getProduct().equals(productOpt.get())) {
-//                if (cartItem.getQuantityCart() > 1) {
-//                    cartItem.setQuantityCart(cartItem.getQuantityCart() - 1);
-//                } else {
-//                    cartItems.remove(cartItem);
-//                }
-//                productFoundInCart = true;
-//                break;
-//            }
-//        }
-//
-//        if (!productFoundInCart) {
-//            throw new CartException("Product not found in the cart");
-//        }
-//
-//        cart.setCartItems(cartItems);
-//        cartRepository.save(cart);
-//        return cart;
-//    }
-
 }
 

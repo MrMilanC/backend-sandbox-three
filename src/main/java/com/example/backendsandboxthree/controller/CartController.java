@@ -4,9 +4,6 @@ import com.example.backendsandboxthree.exception.CartException;
 import com.example.backendsandboxthree.exception.ProductException;
 import com.example.backendsandboxthree.exception.UserException;
 import com.example.backendsandboxthree.model.Cart;
-import com.example.backendsandboxthree.model.CartItem;
-import com.example.backendsandboxthree.model.Product;
-import com.example.backendsandboxthree.service.CartItemService;
 import com.example.backendsandboxthree.service.CartService;
 import com.example.backendsandboxthree.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,28 +56,4 @@ public class CartController {
                                                         @PathVariable("productId") Long productId) throws CartException, UserException, ProductException {
         return new ResponseEntity<Integer>(cartService.viewCartItemQuantity(userName, productId), HttpStatus.OK);
     }
-
-//    @GetMapping("/cartitem-quantity/{userName}")
-//    public ResponseEntity<Integer> viewCartItemQuantity(@RequestParam("userName") String userName,
-//                                                        @PathVariable("productId") Long productId) throws CartException, UserException, ProductException {
-//        return new ResponseEntity<Integer>(cartService.viewCart(userName).getCartItems(), HttpStatus.OK);
-//    }
-
-//    @DeleteMapping("/remove/{cartId}")
-//    public ResponseEntity<Cart> removeAllProduct(@PathVariable("cartId") Long cartId)
-//            throws CartException, UserException {
-//        return new ResponseEntity<Cart>(cartService.removeAllProduct(cartId), HttpStatus.OK);
-//    }
-
-//    @PutMapping("/increase/{cartId}/{productId}")
-//    public ResponseEntity<Cart> increaseProductQuantity(@PathVariable("cartId") Long cartId,
-//                                                        @PathVariable("productId") Long productId) throws CartException, UserException, ProductException {
-//        return new ResponseEntity<Cart>(cartService.increaseProductQuantity(cartId, productId), HttpStatus.OK);
-//    }
-//
-//    @PutMapping("/decrease/{cartId}/{productId}")
-//    public ResponseEntity<Cart> decreaseProductQuantity(@PathVariable("cartId") Long cartId,
-//                                                        @PathVariable("productId") Long productId) throws CartException, UserException, ProductException {
-//        return new ResponseEntity<Cart>(cartService.decreaseProductQuantity(cartId, productId), HttpStatus.OK);
-//    }
 }

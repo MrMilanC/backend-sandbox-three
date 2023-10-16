@@ -1,9 +1,6 @@
 package com.example.backendsandboxthree.service;
 
-import com.example.backendsandboxthree.exception.ProductException;
 import com.example.backendsandboxthree.exception.UserException;
-//import com.example.backendsandboxthree.model.Cart;
-import com.example.backendsandboxthree.model.Product;
 import com.example.backendsandboxthree.model.User;
 import com.example.backendsandboxthree.repository.CartRepository;
 import com.example.backendsandboxthree.repository.UserRepository;
@@ -18,22 +15,8 @@ public class UserService {
 
     @Autowired
     private final UserRepository userRepository;
-
     @Autowired
     private CartRepository cartRepository;
-
-//    @Override
-//    public UserService loadUserByUsername(String username)throws UserException {
-//        User user = userRepository.findByUserNameOrEmail(username, username);
-//        if(user==null){
-//            throw new UserException("User not exists by Username");
-//        }
-//
-//        Set<GrantedAuthority> authorities = user.getRoles().stream()
-//                .map((role) -> new SimpleGrantedAuthority(role.getName()))
-//                .collect(Collectors.toSet());
-//        return new com.example.backendsandboxthree.model.User(username,user.getPassword(),authorities);
-//    }
 
     public boolean doesUsernameExist(String username) {
         return userRepository.existsByUsername(username);
@@ -49,16 +32,6 @@ public class UserService {
     }
 
     public User addUser(User user) throws UserException {
-//        Cart cart = new Cart();
-//        user.setCart(cart);
-//        cart.setUser(user);
-//        User c = userRepository.save(user);
-//
-//        if (c != null) {
-//            return c;
-//        } else {
-//            throw new UserException("customer not added");
-//        }
         return userRepository.save(user);
     }
 

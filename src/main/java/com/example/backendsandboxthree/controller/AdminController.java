@@ -14,9 +14,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,14 +26,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
-//@CrossOrigin(origins = "*")
-//@CrossOrigin(origins = "http://localhost:63343")
 @CrossOrigin(origins = "http://localhost:63343", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE}, allowedHeaders = "*")
 public class AdminController {
 
     /////////////////////Product Section
     public static String uploadDir = "C:/Users/milan/WebstormProjects/frontend-webshop-main/img/user-files";
-    //public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img";
 
     @Autowired
     private ProductService productService;
@@ -113,8 +108,6 @@ public class AdminController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/users/view")
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    //@PreAuthorize(hasRole('ADMIN')")
     public ResponseEntity<List<User>> viewAllUser() throws UserException {
         return new ResponseEntity<List<User>>(userService.viewAllUser(), HttpStatus.OK);
     }

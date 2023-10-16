@@ -68,27 +68,11 @@ public class ProductService {
         }
     }
 
-//    public List<Product> viewProductByCategory(Long categoryId) throws ProductException {
-//        Optional<Category> category = categoryRepository.findById(categoryId);
-//        if (category.isPresent()) {
-//            return category.get().getProductList();
-//        } else {
-//            throw new ProductException("Product not found with category id - " + categoryId);
-//        }
-//    }
-
-
-
-//    public List<Product> getAllProductsByCategoryId(Long categoryId) {
-//        return productRepository.findAllByCategoryId(categoryId);
-//    }
-
     public Product removeProduct(Long productId) throws ProductException {
         Product productRemoved = productRepository.findById(productId).orElseThrow(() -> new ProductException("Product not found"));
         productRepository.delete(productRemoved);
         return productRemoved;
     }
-
 
     public Optional<Product> getProductById(Long id) {
         return productRepository.findById(id);
