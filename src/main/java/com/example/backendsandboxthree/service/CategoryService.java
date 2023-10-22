@@ -22,9 +22,11 @@ public class CategoryService {
     public List<Product> viewProductByCategory(Long categoryId) throws ProductException {
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isPresent()) {
-            return null;
+            // Assuming you have a field in Category representing the products
+            List<Product> products = category.get().getProducts();
+            return products;
         } else {
-            throw new ProductException("Product not found with category id - " + categoryId);
+            throw new ProductException("Category not found with id - " + categoryId);
         }
     }
 }
