@@ -3,7 +3,6 @@ package com.example.backendsandboxthree.service;
 import com.example.backendsandboxthree.exception.UserException;
 import com.example.backendsandboxthree.model.User;
 import com.example.backendsandboxthree.repository.UserRepository;
-import com.example.backendsandboxthree.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
