@@ -1,6 +1,5 @@
 package com.example.backendsandboxthree.controller;
 
-import com.example.backendsandboxthree.dto.NewProductDTO;
 import com.example.backendsandboxthree.dto.NewUserDTO;
 import com.example.backendsandboxthree.exception.ProductException;
 import com.example.backendsandboxthree.exception.UserException;
@@ -15,9 +14,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,13 +26,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin")
-//@CrossOrigin(origins = "*")
-@CrossOrigin(origins = "http://localhost:63343")
+@CrossOrigin(origins = "http://localhost:63343", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE}, allowedHeaders = "*")
 public class AdminController {
 
     /////////////////////Product Section
     public static String uploadDir = "C:/Users/milan/WebstormProjects/frontend-webshop-main/img/user-files";
-    //public static String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img";
 
     @Autowired
     private ProductService productService;
@@ -44,30 +39,20 @@ public class AdminController {
 
     @PostMapping("/products/add")
     public ResponseEntity<Product> addProduct(@RequestParam("productName") String productName,
-                                                    @RequestParam("productPrice") double productPrice,
-                                                    @RequestParam("productDescription") String productDescription,
-                                                    @RequestParam("productQuantity") double productQuantity,
-                                                    @RequestParam("categoryId") Category categoryId,
-                                                    @RequestParam("productImage") MultipartFile imageFile,
-                                                    @RequestParam("imageName") String imageName) throws ProductException, IOException {
+                                              @RequestParam("productPrice") double productPrice,
+                                              @RequestParam("productDescription") String productDescription,
+                                              @RequestParam("productQuantity") double productQuantity,
+                                              @RequestParam("categoryId") Category categoryId,
+                                              @RequestParam("productImage") MultipartFile imageFile,
+                                              @RequestParam("imageName") String imageName) throws ProductException, IOException {
         Product product = new Product();
         product.setProductName(productName);
         product.setPrice(productPrice);
         product.setDescription(productDescription);
         product.setQuantity(productQuantity);
         product.setCategory(categoryId);
-        String imageUUID;
-        if(!imageFile.isEmpty()){
-            imageUUID = imageFile.getOriginalFilename();
-            Path fileNameandPath = Paths.get(uploadDir, imageUUID);
-            Files.write(fileNameandPath, imageFile.getBytes());
-        } else {
-            imageUUID = imageName;
-        }
-        product.setImageName(imageUUID);
-        //productService.addProduct(product);
 
-        Product newProduct = productService.addProduct(product);
+        Product newProduct = productService.addProduct(product, imageFile);
 
         return new ResponseEntity<Product>(newProduct, HttpStatus.OK);
     }
@@ -78,26 +63,18 @@ public class AdminController {
                                                  @RequestParam("productDescription") String productDescription,
                                                  @RequestParam("productQuantity") double productQuantity,
                                                  @RequestParam("categoryId") Long categoryId,
-                                                 //@RequestParam(name = "categoryId", required = false) Category categoryId,
                                                  @RequestParam("productImage") MultipartFile imageFile,
                                                  @RequestParam("imageName") String imageName) throws ProductException, IOException {
 
-            // Retrieve the existing product by its ID
-            Product existingProduct = productService.getProductById(productId)
-                    .orElseThrow(() -> new ProductException("Product not found with ID: " + productId));
+        // Retrieve the existing product by its ID
+        Product existingProduct = productService.getProductById(productId)
+                .orElseThrow(() -> new ProductException("Product not found with ID: " + productId));
 
-            // Update the existing product with data from the DTO
-
+        // Update the existing product with data from the input
         existingProduct.setProductName(productName);
         existingProduct.setPrice(productPrice);
         existingProduct.setDescription(productDescription);
         existingProduct.setQuantity(productQuantity);
- //       existingProduct.setCategory(categoryId);
-
-//        newProductDTO.setCategoryId(product.get().getCategory().getCategoryId());
-//
-//        existingProduct.setImageName(newProductDTO.getImageName());
-
         existingProduct.setCategory(categoryService.getCategoryById(categoryId).orElse(null));
 
         String imageUUID;
@@ -116,16 +93,14 @@ public class AdminController {
 
     }
 
-        @DeleteMapping("/products/remove/{productId}")
-    public ResponseEntity<Product> removeProductById(@PathVariable("productId") Long productId)
-            throws ProductException {
+    @DeleteMapping("/products/remove/{productId}")
+    public ResponseEntity<Product> removeProductById(@PathVariable("productId") Long productId) throws ProductException {
         return new ResponseEntity<Product>(productService.removeProduct(productId), HttpStatus.OK);
     }
 
 
     //////////////////////User Section
-
-    @Autowired //erstellt automatisch Repository
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private UserService userService;
@@ -133,10 +108,13 @@ public class AdminController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/users/view")
-    //@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    //@PreAuthorize(hasRole('ADMIN')")
     public ResponseEntity<List<User>> viewAllUser() throws UserException {
         return new ResponseEntity<List<User>>(userService.viewAllUser(), HttpStatus.OK);
+    }
+
+    @GetMapping("/users/view/{userId}")
+    public ResponseEntity<User> viewUserById(@PathVariable("userId") Long userId) throws UserException {
+        return new ResponseEntity<User>(userService.viewUser(userId), HttpStatus.OK);
     }
 
     @PostMapping("/users/create")
@@ -157,6 +135,30 @@ public class AdminController {
 
         userService.addUser(user);
         return new ResponseEntity<>("User is registered successfully!", HttpStatus.OK);
+    }
+
+    @PutMapping("/users/update/{userId}")
+    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestParam("userFirstName") String userFirstName,
+                                        @RequestParam("userLastName") String userLastName,
+                                        @RequestParam("userUserName") String userUserName,
+                                        @RequestParam("userPassword") String userPassword,
+                                        @RequestParam("userEmail") String userEmail,
+                                        @RequestParam("userRole") String userRole) throws UserException, IOException {
+
+        User existingUser = userService.getUserById(userId)
+                .orElseThrow(() -> new UserException("Product not found with ID: " + userId));
+
+
+        existingUser.setFirstName(userFirstName);
+        existingUser.setLastName(userLastName);
+        existingUser.setUsername(userUserName);
+        existingUser.setPassword(userPassword);
+        existingUser.setEmail(userEmail);
+        existingUser.setRole(userRole);
+
+        User updatedUser = userService.updateUser(existingUser);
+
+        return new ResponseEntity<User>(updatedUser, HttpStatus.OK);
     }
 
     @DeleteMapping("/users/remove/{userId}")

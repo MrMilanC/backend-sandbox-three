@@ -1,8 +1,5 @@
 package com.example.backendsandboxthree.dto;
 
-import com.example.backendsandboxthree.model.Category;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 @Data

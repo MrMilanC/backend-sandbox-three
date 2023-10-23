@@ -13,8 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-//@CrossOrigin(origins = "*")
-//@CrossOrigin(origins = "http://localhost:63343")
 @CrossOrigin(origins = "http://localhost:63343", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE}, allowedHeaders = "*")
 public class ProductController {
 
@@ -24,7 +22,6 @@ public class ProductController {
     private CategoryService categoryService;
 
     @GetMapping("/view")
-    //@PreAuthorize("hasRole('USER')")
     public ResponseEntity<List<Product>> viewAllProduct() throws ProductException {
         return new ResponseEntity<List<Product>>(productService.viewAllProduct(), HttpStatus.OK);
     }
@@ -37,7 +34,6 @@ public class ProductController {
     @GetMapping("view/category/{categoryId}")
     public ResponseEntity<List<Product>> viewProductByCategoryId(@PathVariable("categoryId") Long categoryId)
             throws ProductException {
-            System.out.println("gedruckt");
         return new ResponseEntity<List<Product>>(categoryService.viewProductByCategory(categoryId), HttpStatus.OK);
     }
 }

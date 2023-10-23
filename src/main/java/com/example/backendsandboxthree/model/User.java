@@ -1,10 +1,7 @@
 package com.example.backendsandboxthree.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 @Entity
@@ -17,17 +14,10 @@ public class User {
     private String lastName;
     private String username;
     private String email;
-    @JsonIgnore
     private String password;
+    //private boolean isActive;
     private String role;
-    //@JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     private Cart cart;
-
-//    public User(){}
-//
-//    public User(String firstName, String lastName, String username, String email, String password) {
-//
-//    }
 }
 

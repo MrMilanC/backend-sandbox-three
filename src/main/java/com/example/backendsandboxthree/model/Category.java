@@ -1,24 +1,31 @@
 package com.example.backendsandboxthree.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Setter;
 
 import java.util.List;
 
 @Data
 @Entity
+@Setter
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
-    //@OneToMany(mappedBy = "category_id")
     private Long categoryId;
 
-    //@OneToMany(mappedBy = "category_name")
     private String categoryName;
 
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "category")
-//    private List<Product> productList;
+    public void setId(Long categoryId) {
+    }
+
+    public void setProductList(List<Product> products) {
+    }
+    @OneToMany(mappedBy = "category")
+    private List<Product> products;
+
+    public List<Product> getProductList() {
+        return products;
+    }
 }

@@ -8,13 +8,19 @@ import com.example.backendsandboxthree.repository.CategoryRepository;
 import com.example.backendsandboxthree.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ProductService {
+
+    public static String uploadDir = "C:/Users/milan/WebstormProjects/frontend-webshop-main/img/user-files";
 
     @Autowired
     private ProductRepository productRepository;
@@ -30,19 +36,19 @@ public class ProductService {
         }
     }
 
-    public Product addProduct(Product product) throws ProductException, IOException {
+    public Product addProduct(Product product, MultipartFile imageFile) throws ProductException, IOException {
+        String imageUUID;
+        if (!imageFile.isEmpty()) {
+            imageUUID = imageFile.getOriginalFilename();
+            Path fileNameandPath = Paths.get(uploadDir, imageUUID);
+            Files.write(fileNameandPath, imageFile.getBytes());
+        } else {
+            throw new ProductException("Image file is empty");
+        }
+        product.setImageName(imageUUID);
+
         return productRepository.save(product);
     }
-
-//    public NewProductDTO update(NewProductDTO newProductDTO) throws ProductException {
-//        var toUpdate = this.productRepository.findById(newProductDTO.getProductId())
-//                .orElseThrow(() -> new ProductException("Product with the given ID does not exist"));
-//        if (newProductDTO.getProductName().isEmpty()) {
-//            throw new IllegalArgumentException("The name of the product cannot be empty");
-//        }
-//        toUpdate.setProductName(newProductDTO.getProductName());
-//        return this.productRepository.save(toUpdate);
-//    }
 
     public Product updateProduct(Product product) throws ProductException {
         Optional<Product> productUpdate = productRepository.findById(product.getProductId());
@@ -62,27 +68,11 @@ public class ProductService {
         }
     }
 
-//    public List<Product> viewProductByCategory(Long categoryId) throws ProductException {
-//        Optional<Category> category = categoryRepository.findById(categoryId);
-//        if (category.isPresent()) {
-//            return category.get().getProductList();
-//        } else {
-//            throw new ProductException("Product not found with category id - " + categoryId);
-//        }
-//    }
-
-
-
-//    public List<Product> getAllProductsByCategoryId(Long categoryId) {
-//        return productRepository.findAllByCategoryId(categoryId);
-//    }
-
     public Product removeProduct(Long productId) throws ProductException {
         Product productRemoved = productRepository.findById(productId).orElseThrow(() -> new ProductException("Product not found"));
         productRepository.delete(productRemoved);
         return productRemoved;
     }
-
 
     public Optional<Product> getProductById(Long id) {
         return productRepository.findById(id);

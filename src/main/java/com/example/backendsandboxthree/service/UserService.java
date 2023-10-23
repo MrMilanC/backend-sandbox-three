@@ -1,7 +1,6 @@
 package com.example.backendsandboxthree.service;
 
 import com.example.backendsandboxthree.exception.UserException;
-//import com.example.backendsandboxthree.model.Cart;
 import com.example.backendsandboxthree.model.User;
 import com.example.backendsandboxthree.repository.CartRepository;
 import com.example.backendsandboxthree.repository.UserRepository;
@@ -16,22 +15,8 @@ public class UserService {
 
     @Autowired
     private final UserRepository userRepository;
-
     @Autowired
     private CartRepository cartRepository;
-
-//    @Override
-//    public UserService loadUserByUsername(String username)throws UserException {
-//        User user = userRepository.findByUserNameOrEmail(username, username);
-//        if(user==null){
-//            throw new UserException("User not exists by Username");
-//        }
-//
-//        Set<GrantedAuthority> authorities = user.getRoles().stream()
-//                .map((role) -> new SimpleGrantedAuthority(role.getName()))
-//                .collect(Collectors.toSet());
-//        return new com.example.backendsandboxthree.model.User(username,user.getPassword(),authorities);
-//    }
 
     public boolean doesUsernameExist(String username) {
         return userRepository.existsByUsername(username);
@@ -47,16 +32,6 @@ public class UserService {
     }
 
     public User addUser(User user) throws UserException {
-//        Cart cart = new Cart();
-//        user.setCart(cart);
-//        cart.setUser(user);
-//        User c = userRepository.save(user);
-//
-//        if (c != null) {
-//            return c;
-//        } else {
-//            throw new UserException("customer not added");
-//        }
         return userRepository.save(user);
     }
 
@@ -74,17 +49,6 @@ public class UserService {
         return userRemoved;
     }
 
-//    public User removeUser(Long userId) throws UserException {
-//        Optional<User> opt = userRepository.findById(userId);
-//        if (opt.isPresent()) {
-//            User c = opt.get();
-//            userRepository.delete(c);
-//            return c;
-//        } else {
-//            throw new UserException("Customer not found with cid - " + userId);
-//        }
-//    }
-
     public List<User> viewAllUser() throws UserException {
         List<User> users = userRepository.findAll();
         if (users.size() > 0) {
@@ -92,5 +56,18 @@ public class UserService {
         } else {
             throw new UserException("customer not found");
         }
+    }
+
+    public User viewUser(Long userId) throws UserException {
+        Optional<User> opt = userRepository.findById(userId);
+        if (opt.isPresent()) {
+            return opt.get();
+        } else {
+            throw new UserException("User not found with user id - " + userId);
+        }
+    }
+
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
     }
 }
